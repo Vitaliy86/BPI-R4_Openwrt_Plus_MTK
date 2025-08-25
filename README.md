@@ -1,83 +1,84 @@
 # **BPI-R4 - Openwrt + Kernel 6.6.94 + MTK-Feeds**
 
-I finally found some time and finish off the new 6.6.94.Build script that I've been working on for sometime now. The purpose was to try simplify it for my test builds and for those that are less familiar with linux based systems that jsut want to build a working image for their BPI-R4.. Most of the current snapshot inculding kernel 6.6.100 are not that stable and every time I try the lates commit I'm down grading back to 6.6.94.
+Я наконец нашёл время и завершил новый скрипт сборки 6.6.94, который я уже давно разрабатывал. Цель заключалась в том, чтобы упростить процесс для тестовых сборок и для тех, кто не знаком с системами на базе Linux и просто хочет собрать рабочее образное для своего BPI-R4. Большинство текущих версий, включая ядро 6.6.100, не очень стабильны, и каждый раз, когда я пытаюсь использовать последнюю коммит, я возвращаюсь к версии 6.6.94.
 
-Anyway, the new script handles everything from cloning the source code and applying custom patches to configuring the build and preparing user-specific files.
+В любом случае, новый скрипт управляет всем процессом от клонирования исходного кода и применения пользовательских патчей до настройки сборки и подготовки пользовательских файлов.
 
-## **Features**
+## **Функции**
 
-* **Automated Build Process**: Clones the correct versions of OpenWrt and the MediaTek feeds from scratch for a clean, reproducible build every time.  
-* **Customizable Patches**: Easily apply or disable patches for hardware fixes (e.g., SFP, EEPROM), software improvements, and UI enhancements.  
-* **Flexible Configuration**:  
-  * Place your custom configuration files (`like wireless, network, firewall, or shadow`) in the `files/` directory to have them included in the final image.  
-  * Use a custom `.config` file (`defconfig`) to define the exact packages and kernel modules for your build.  
-* **First-Boot Setup Scripts**: Add setup scripts to the `scripts/` directory, which will run on the device's first boot to automate initial configuration (e.g., setting up a dumb AP).  
-* **Safety Checks**: The script automatically converts file line endings with `dos2unix` to prevent issues when editing files on Windows systems.
+* **Автоматизированный процесс сборки**: Клонирует нужные версии OpenWrt и патчей от MediaTek с нуля для чистого, воспроизводимого сборки каждый раз.  
+* **Гибкие патчи**: Просто применяйте или отключайте патчи для исправления аппаратных проблем (например, SFP, EEPROM), улучшения программного обеспечения и улучшения интерфейса.  
+* **Гибкая конфигурация**:  
+  * Размещайте свои кастомные конфигурационные файлы (`как wireless, network, firewall или shadow`) в директории `files/`, чтобы они были включены в итоговый образ.  
+  * Используйте кастомный файл `.config` (`defconfig`) для определения точного набора пакетов и ядерных модулей для вашей сборки.  
+* **Скрипты на первом запуске**: Добавьте скрипты настройки в директорию `scripts/`, которые будут выполняться при первом запуске устройства для автоматизации начальной настройки (например, настройка режима dumb AP).  
+* **Проверки безопасности**: Скрипт автоматически конвертирует форматы строк в файлах с помощью `dos2unix`, чтобы предотвратить проблемы при редактировании файлов на системах Windows.
 
-## **How to Use**
+## **Как использовать**
 
-1. **Prerequisites**: Ensure you have a compatible build environment, such as **Ubuntu 24.04 LTS**. You will also need to install `dos2unix`:  
-   `sudo apt update`
+1. **Предварительные требования**: Убедитесь, что у вас есть совместимая среда сборки, например, **Ubuntu 24.04 LTS**. Вам также нужно установить `dos2unix`:  
+   `sudo apt update`  
    
-   `sudo apt install build-essential clang flex bison g++ gawk gcc-multilib g++-multilib \\`
+   `sudo apt install build-essential clang flex bison g++ gawk gcc-multilib g++-multilib \\`  
    
-   `gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev \\`
+   `gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev \\`  
    
    `file wget dos2unix`
 
-2. **Clone repo**:
+2. **Клонирование репозитория**:
 
-   `git clone https://github.com/Gilly1970/BPI-R4_Openwrt_Plus_MTK.git`
+   `git clone https://github.com/Gilly1970/BPI-R4_Openwrt_Plus_MTK.git`  
    
    `sudo chmod 776 -R BPI-R4_Openwrt_Plus_MTK`
 
-3. **Prepare Your Custom Files**:  
-   * Place any custom patches you want to apply into the patches/ directory.  
-   * Place your final configuration files (e.g., shadow, network) into the files/etc/ or files/config/ directories.  
-   * If you have a first-boot script, place it in the scripts/ directory.  
-4. **Configure the Build Script**:  
-   * Open the build script (e.g., 6.6.94.Build.sh) in a text editor.  
-   * At the top of the file, set the `SETUP\_SCRIPT\_NAME` variable to the name of your first-boot script, or leave it as "" to disable it.  
-   * Review the apply\_patches function to enable or disable any patches by commenting or uncommenting the cp commands.  
-5. **Run the Script**:  
-   * Make the script executable:  
-     `chmod \+x 6.6.94.Build.sh`
+3. **Подготовка кастомных файлов**:  
+   * Разместите любые кастомные патчи, которые хотите применить, в директорию `patches/`.  
+   * Разместите свои конечные конфигурационные файлы (например, shadow, network) в директории `files/etc/` или `files/config/`.  
+   * Если у вас есть скрипт первого запуска, разместите его в директории `scripts/`.  
+4. **Настройка скрипта сборки**:  
+   * Откройте скрипт сборки (например, 6.6.94.Build.sh) в текстовом редакторе.  
+   * В начале файла установите переменную `SETUP_SCRIPT_NAME` на имя вашего скрипта первого запуска или оставьте пустым, чтобы отключить его.  
+   * Проверьте функцию `apply_patches`, чтобы включить или отключить патчи, комментируя или разкомментируя команды `cp`.  
+5. **Запуск скрипта**:  
+   * Сделайте скрипт исполняемым:  
+     `chmod +x 6.6.94.Build.sh`  
      
-   * Execute the script:  
+   * Запустите скрипт:  
      `./6.6.94.Build.sh`
 
-The build process will begin and may take a significant amount of time, depending on your system's performance. Once complete, the firmware images will be located in the `openwrt/bin/targets/mediatek/filogic/ directory`.
-## **Customization**
+Процесс сборки начнётся и может занять значительное время в зависимости от производительности вашей системы. После завершения образы прошивки будут находиться в директории `openwrt/bin/targets/mediatek/filogic/`.
 
-This build is designed to be highly customizable. Here are the key directories you can modify:
+## **Настройка**
 
-  * `patches/`: Contains all `.patch` files and Makefiles that modify the source code. The defconfig file, which defines the build's package selection, is also located here.  
-  * `files/`: This directory mirrors the root filesystem of the final image.  
-  * `files/etc/`: For general configuration files like `shadow`.  
-  * `files/config/`: For UCI-specific configuration files like `network, wireless, and firewall`.  
-  * `scripts/`: Contains shell scripts that can be run on the first boot via the `uci-defaults` mechanism.
+Этот образ разработан для максимальной гибкости. Ниже перечислены ключевые директории, которые вы можете изменять:
 
-By adding or removing files in these directories, you can tailor the final firmware to your exact needs without having to modify the main build script logic.
+  * `patches/`: Содержит все файлы `.patch` и Makefiles, которые изменяют исходный код. Файл `defconfig`, определяющий выбор пакетов для сборки, также находится здесь.  
+  * `files/`: Эта директория отражает корневую файловую систему итогового образа.  
+  * `files/etc/`: Для общих конфигурационных файлов, таких как `shadow`.  
+  * `files/config/`: Для конфигурационных файлов, специфичных для UCI, таких как `network`, `wireless` и `firewall`.  
+  * `scripts/`: Содержит скрипты на языке shell, которые могут быть запущены при первом запуске через механизм `uci-defaults`.
 
-### **For latest compiled bpi-r4 sysupgradeb/sdcard images can be downloaded from mediafire..**
+Добавляя или удаляя файлы в этих директориях, вы можете настроить конечную прошивку под свои конкретные потребности, не модифицируя логику основного скрипта сборки.
 
-Images for BE14 without the eeprom issue - https://www.mediafire.com/file/n3zfy5ywryj3vsf/BPI_R4_Images_without_TX_Power_patches_25.08.2025.zip
+### **Современные образы для BPI-R4 (sysupgrade/sdcard) доступны на MediaFire**
 
-Images for BE14 with the eeprom issue - https://www.mediafire.com/file/wqo9c24ktf4h40b/BPI-R4_Images_with_TX_Power_patches_25.08.2025.zip
+Образы для BE14 без проблемы с EEPROM — https://www.mediafire.com/file/n3zfy5ywryj3vsf/BPI_R4_Images_without_TX_Power_patches_25.08.2025.zip
 
-### **Updated with new patchs to remove the duplicating lan ports issue showing in Luci..**
+Образы для BE14 с проблемой EEPROM — https://www.mediafire.com/file/wqo9c24ktf4h40b/BPI-R4_Images_with_TX_Power_patches_25.08.2025.zip
 
-If your using my build or any openwrt-24.10 commits pre-kernel 6.6.100 use - 3703-Gillys-Remove-duplicated-ports.patch
+### **Обновлено с новыми патчами для устранения проблемы с дублированием портов LAN, отображающихся в Luci**
+
+Если вы используете мой образ или любые коммиты OpenWrt-24.10 до ядра 6.6.100 — используйте патч **3703-Gillys-Remove-duplicated-ports.patch**:
 
   `cp "$SOURCE_PATCH_DIR/3703-Gillys-Remove-duplicated-ports.patch" "$MTK_FEEDS_DIR/autobuild/unified/filogic/24.10/patches-base/"`
 
-If your using openwrt-24.10 commit with kernel 6.6.100 use this patch instead - 3703-remove-02_network.orig.patch
+Если вы используете коммит OpenWrt-24.10 с ядром 6.6.100 — используйте этот патч вместо предыдущего — **3703-remove-02_network.orig.patch**:
 
   `cp "$SOURCE_PATCH_DIR/3703-remove-02_network.orig.patch" "$MTK_FEEDS_DIR/autobuild/unified/filogic/24.10/patches-base/"`
 
-### **Update Notes..**
+### **Заметки об обновлении**
 
-* I've added a new patch that was posted by "moi_eric11 and Zerogiven" for the faulty BE14 (`999-mt7988a-bananapi-bpi-r4-BE14000-binmode.patch`) if you want to test it out?
-*    - I compiled the new patch on its own without the other patches but on my test BE14 I lost the options to change the Maximum transmit power: ?
-*    - I compiled again and inculded the 9997-use-tx_power-from-default-fw-if-EEPROM-contains-0s.patch like I do with the 99999_tx_power_check.patch but still no change.
-*    - Went back to using both the 99999_tx_power_check.patch & 9997-use-tx_power-from-default-fw-if-EEPROM-contains-0s.patch for my test BE14 to work correctly again.
+* Я добавил новый патч, опубликованный "moi_eric11" и "Zerogiven", для исправления неисправности BE14 (`999-mt7988a-bananapi-bpi-r4-BE14000-binmode.patch`) — если вы хотите протестировать его?  
+*    - Я собрал новый патч отдельно без других патчей, но на моём тестовом BE14 потерял возможность изменять максимальную мощность передачи: ?  
+*    - Я собрал снова и включил патч `9997-use-tx_power-from-default-fw-if-EEPROM-contains-0s.patch` так же, как и с патчем `99999_tx_power_check.patch`, но изменения не наблюдались.  
+*    - Вернулся к использованию обоих патчей `99999_tx_power_check.patch` и `9997-use-tx_power-from-default-fw-if-EEPROM-contains-0s.patch` для корректной работы моего тестового BE14.
