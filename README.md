@@ -19,11 +19,7 @@
 1. **Предварительные требования**: Убедитесь, что у вас есть совместимая среда сборки, например, **Ubuntu 24.04 LTS**. Вам также нужно установить `dos2unix`:  
    `sudo apt update`  
    
-   `sudo apt install build-essential clang flex bison g++ gawk gcc-multilib g++-multilib \\`  
-   
-   `gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev \\`  
-   
-   `file wget dos2unix`
+   `sudo apt install build-essential clang flex bison g++ gawk gcc-multilib g++-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev file wget dos2unix`
 
 2. **Клонирование репозитория**:
 
